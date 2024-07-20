@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import { useOrganization, useUser } from "@clerk/nextjs";
-import {  useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { UploadButton } from "./upload-button";
 import { FileCard } from "./file-card";
@@ -9,17 +9,19 @@ import { Loader2, Upload } from "lucide-react";
 import Image from "next/image";
 
 export default function Home() {
-  const organization =  useOrganization();
-  const user= useUser()
+  const organization = useOrganization();
+  const user = useUser();
 
-  let orgId :string | undefined  = undefined;
-  if(organization.isLoaded &&user.isLoaded)
-  {
-orgId = organization.organization?.id ?? user.user?.id
-  } 
-;
-  const files = useQuery(api.files.getFiles,orgId?{orgId}:'skip');
-  const isLoading = files ===undefined;
+  let orgId: string | undefined = undefined;
+  if (organization.isLoaded && user.isLoaded) {
+    orgId = organization.organization?.id ?? user.user?.id;
+  }
+  
+  const files = useQuery(api.files.getFiles, orgId ? { orgId } : "skip");
+  const isLoading = files === undefined;
+
+  console.log(files)
+
   return (
     <main className="container mx-auto pt-12">
       {isLoading && (
@@ -46,7 +48,9 @@ orgId = organization.organization?.id ?? user.user?.id
             <h1 className="text-4xl font-bold">Your Files</h1>
             <UploadButton />
           </div>
-          <div className="grid grid-cols-4 gap-4">  {/* Adjusted to display 4 items per row */}
+          <div className="grid grid-cols-4 gap-4">
+            {" "}
+            {/* Adjusted to display 4 items per row */}
             {files.map((file) => (
               <FileCard key={file._id} file={file} />
             ))}
