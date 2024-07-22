@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
 import Image from "next/image";
-import { api } from "../../convex/_generated/api";
+import { api } from "../../../../convex/_generated/api";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { Doc } from "../../convex/_generated/dataModel";
+import { Doc } from "../../../../convex/_generated/dataModel";
 
 const formSchema = z.object({
   title: z.string().min(1).max(200),
@@ -107,7 +107,7 @@ orgId = organization.organization?.id ?? user.user?.id
            <DialogHeader>
             <DialogTitle className="mb-8">Upload your File Here</DialogTitle>
               <DialogDescription>
-              <Form {...form}>
+                <div><Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
@@ -169,6 +169,8 @@ orgId = organization.organization?.id ?? user.user?.id
           Submit</Button>
       </form>
     </Form>
+    </div>
+              
                  </DialogDescription>
              </DialogHeader>
           </DialogContent>

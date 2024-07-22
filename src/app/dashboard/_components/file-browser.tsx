@@ -2,17 +2,17 @@
 
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { UploadButton } from "./dashboard/_components/upload-button";
-import { FileCard } from "./dashboard/_components/file-card";
+import { api } from "../../../../convex/_generated/api";
+import { UploadButton } from "./upload-button";
+import { FileCard } from "./file-card";
 import { FileIcon, Loader2, StarIcon, Upload } from "lucide-react";
 import Image from "next/image";
-import { SearchBar } from "./dashboard/_components/search-bar";
+import { SearchBar } from "./search-bar";
 import { SetStateAction, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function Home() {
+export function  FileBrowser ({title,favorites}:{title:string,favorites?:boolean}) {
   const organization = useOrganization();
   const user = useUser();
   const [query ,setQuery]=useState("");
@@ -21,28 +21,15 @@ export default function Home() {
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
   }
-  const files = useQuery(api.files.getFiles, orgId ? { orgId } : "skip");
+  const files = useQuery(api.files.getFiles,orgId ? { orgId,query,favorites } : "skip");
    //const files = useQuery(api.files.getFiles, orgId ? { orgId, query } : "skip");
   const isLoading = files === undefined;
 
   console.log(files)
 
   return (
-    <main className="container mx-auto pt-12">
-      <div className="flex gap-8">
-      <div className="w-40 flex flex-col gap-4">
-        <Link href="/dashboard/files">
-          <Button variant={"link"} className="flex gap-2">
-          <FileIcon/>All File
-        </Button>
-        </Link>
-        
-        <Link href="/dashboard/favorites"><Button variant={"link"} className="flex gap-2">
-          <StarIcon/>Favorites File
-        </Button>
-        </Link>
-      </div>
-      <div className="w-full">
+  
+  <div>
       {isLoading && (
         <div className="flex flex-col gap-8 items-center mt-24">
           <Loader2 className="h-32 w-32 animate-spin text-gray-500" />
@@ -65,7 +52,7 @@ export default function Home() {
       {!isLoading &&  (
         <>
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold">Your Files</h1>
+            <h1 className="text-4xl font-bold">{title} </h1>
          {/* <SearchBar query={query} setQuery={setQuery}/> */}
             <UploadButton />
           </div>
@@ -83,19 +70,14 @@ export default function Home() {
         </div>
               
       )}
-
-
           <div className="grid grid-cols-4 gap-4">
-            {" "}
-            {/* Adjusted to display 4 items per row */}
-            {files.map((file) => (
+            {files?.map((file) => (
               <FileCard key={file._id} file={file} />
             ))}
           </div>
         </>
       )}
       </div>
-      </div>
-    </main>
+   
   );
 }
