@@ -49,7 +49,7 @@ export default function Home() {
           <div className="text-2xl">Loading your images...</div>
         </div>
       )}
-      {!isLoading && !query && files.length === 0 && (
+      {/* {!isLoading && !query && files.length === 0 && (
         <div className="flex flex-col gap-8 items-center mt-24">
           <Image
             alt="An image of a picture and directory icon"
@@ -61,7 +61,7 @@ export default function Home() {
           <UploadButton />
         </div>
               
-      )}
+      )} */}
       {!isLoading &&  (
         <>
           <div className="flex justify-between items-center mb-8">
@@ -89,7 +89,7 @@ export default function Home() {
             {" "}
             {/* Adjusted to display 4 items per row */}
             {files.map((file) => (
-              <FileCard key={file._id} file={file} />
+              <FileCard key={file._id} file={file} favorites={[]} />
             ))}
           </div>
         </>

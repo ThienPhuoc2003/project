@@ -39,7 +39,7 @@ export function  FileBrowser ({title,favoritesOnly}:{title:string,favoritesOnly?
           <div className="text-2xl">Loading your images...</div>
         </div>
       )}
-      {!isLoading && !query && files.length === 0 && (
+      {/* {!isLoading && !query && files.length === 0 && (
         <div className="flex flex-col gap-8 items-center mt-24">
           <Image
             alt="An image of a picture and directory icon"
@@ -51,7 +51,7 @@ export function  FileBrowser ({title,favoritesOnly}:{title:string,favoritesOnly?
           <UploadButton />
         </div>
               
-      )}
+      )} */}
       {!isLoading &&  (
         <>
           <div className="flex justify-between items-center mb-8">
