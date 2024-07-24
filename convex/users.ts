@@ -23,9 +23,7 @@ export const createUser = internalMutation({
         })
     }
 })
-
-
-
+ 
 export const addOrgIdToUser = internalMutation({
     args:{
         tokenIdentifier:v.string(), orgId:v.string()
