@@ -65,116 +65,103 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
       'text/csv':"csv",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
     }as Record<string ,Doc<'files'>["type"]>;
-    try{
+    try {
       await createFile({
-    name:values.title,
-    fileId:storageId, 
-    orgId,
-    type:types[fileType]
-  });
-  form.reset();
+        name: values.title,
+        fileId: storageId,
+        orgId,
+        type: types[fileType],
+      });
 
-  setIsFileDialogOpen(false);
-  toast ({variant:"success",
-  title:"File Uploaded",
-  description:"Now everyone can view your file ",
-})
-    }catch(err){
-      toast ({variant:"destructive",
-      title:"Something went wrong",
-      description:"Your file could not be uploaded,try again later ",
-    })
+      form.reset();
+
+      setIsFileDialogOpen(false);
+
+      toast({
+        variant: "success",
+        title: "Tệp đã được tải lên",
+        description: "Giờ đây mọi người trong tổ chức của bạn đều có thể xem tệp của bạn",});
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Có lỗi xảy ra",
+        description: "Tệp của bạn không thể được tải lên, vui lòng thử lại sau",
+      });
     }
-}
+  }
 
-  let orgId :string | undefined  = undefined;
-  if(organization.isLoaded &&user.isLoaded)
-  {
-orgId = organization.organization?.id ?? user.user?.id
-  } 
+  let orgId: string | undefined = undefined;
+  if (organization.isLoaded && user.isLoaded) {
+    orgId = organization.organization?.id ?? user.user?.id;
+  }
 
-  const [isFileDialogOpen,setIsFileDialogOpen]= useState(false);
+  const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
+
   const createFile = useMutation(api.files.createFile);
 
   return (
-      <Dialog open={isFileDialogOpen} onOpenChange={(isOpen)=>{setIsFileDialogOpen(isOpen);
-      form.reset();
-      }}>
-        <DialogTrigger asChild> 
-        <Button>Upload File</Button>
-        </DialogTrigger>
-          <DialogContent>
-           <DialogHeader>
-            <DialogTitle className="mb-8">Upload your File Here</DialogTitle>
-              <DialogDescription>
-                <div><Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>
-            The title of your
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <Dialog
+      open={isFileDialogOpen}
+      onOpenChange={(isOpen) => {
+        setIsFileDialogOpen(isOpen);
+        form.reset();
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button>Tải Tệp Lên</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="mb-8">Tải Tệp Của Bạn Lên Đây</DialogTitle>
+          <DialogDescription>
+          Tệp này sẽ có thể truy cập bởi bất kỳ ai trong tổ chức của bạn
+          </DialogDescription>
+        </DialogHeader>
 
+        <div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tiêu đề</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        {/* <FormField
-          control={form.control}
-          name="file"
-          render={({ field:{onChange},...field }) => (
-            <FormItem>
-              <FormLabel>File</FormLabel>
-              <FormControl>
-                <Input
-                 type="file"
-                 placeholder="file" {...field} 
-                 onChange={(event) => {
-                   if(!event.target.files) return;
-                   onChange(event.target.files[0]
-                    )}}
-            />
-              </FormControl>  
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
-
-          <FormField
-          control={form.control}
-          name="file"
-          render={() => (
-            <FormItem>
-              <FormLabel>File</FormLabel>
-              <FormControl>
-                <Input
-                 type="file" {...fileRef}/>
-              </FormControl>  
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit"disabled={form.formState.isSubmitting} className="flex gap-1">
-          {form.formState.isSubmitted &&(
-            <Loader2 className="h-4 w-4 animate-spin"/>
-          )}
-          Submit</Button>
-      </form>
-    </Form>
-    </div>
-              
-                 </DialogDescription>
-             </DialogHeader>
-          </DialogContent>
-      </Dialog>
-   
+              <FormField
+                control={form.control}
+                name="file"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Tệp</FormLabel>
+                    <FormControl>
+                      <Input type="file" {...fileRef} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="flex gap-1"
+              >
+                {form.formState.isSubmitting && (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                )}
+                   Gửi
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

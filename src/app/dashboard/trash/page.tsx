@@ -3,9 +3,8 @@ import { FileBrowser } from "../_components/file-browser";
 import { api } from "../../../../convex/_generated/api";
 
 
-export default function FavoritesPage(){
-
-    return <div>
-<FileBrowser title="Yêu thích" favoritesOnly />
-    </div>
+export default function TrashPage(){
+    return (<div>
+<FileBrowser title="Rác" deletedOnly/>
+    </div>)
 }
