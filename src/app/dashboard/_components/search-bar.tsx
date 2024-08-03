@@ -24,13 +24,10 @@ export function SearchBar({query, setQuery}:
     resolver: zodResolver(formSchema),
     defaultValues: {
       query: "",
-    },
-  });
-
+    },});
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setQuery(values.query);
   }
-
   return (
     <div>
       <Form {...form}>
@@ -44,7 +41,7 @@ export function SearchBar({query, setQuery}:
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input {...field} placeholder="Nhập tên tệp của bạn" />
+                  <Input {...field} placeholder="Nhập tên tệp của bạn" className="w-full"/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -54,7 +51,7 @@ export function SearchBar({query, setQuery}:
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="flex gap-1"
+            className="flex items-center gap-1"
           >
             {form.formState.isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin" />
