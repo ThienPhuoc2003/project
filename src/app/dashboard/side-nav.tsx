@@ -24,7 +24,7 @@ export function SideNav() {
       </Link>
       <Link href="/dashboard/favorites">
         <Button variant={"link"} className="flex items-center gap-2">
-          <StarIcon className="w-5 h-5" /> {isExpanded && "Yêu thích"}
+          <StarIcon className="w-5 h-5" /> {isExpanded && "Duyệt"}
         </Button>
       </Link>
       <Link href="/dashboard/trash">
@@ -32,6 +32,11 @@ export function SideNav() {
           <TrashIcon className="w-5 h-5" /> {isExpanded && "Rác"}
         </Button>
       </Link>
+      {/* <Link href="/dashboard/schedule_the_exam">
+        <Button variant={"link"} className="flex items-center gap-2">
+          <StarIcon className="w-5 h-5" /> {isExpanded && "Lịch thi"}
+        </Button>
+      </Link> */}
     </div>
   );
 }

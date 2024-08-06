@@ -30,6 +30,9 @@ export function FileCard({
   const userProfile = useQuery(api.users.getUserProfile, {
     userId: file.userId,
   });
+  const comments = useQuery(api.files.getCommentsByFileId, { fileId: file._id });
+
+  
 
   const typeIcons: Record<Doc<"files">["type"], ReactNode> = {
     image: <ImageIcon />,
@@ -69,19 +72,36 @@ export function FileCard({
         {file.type == "csv" && <GanttChartIcon className="w-20 h-20" />}
         {file.type == "pdf" && <FileTextIcon className="w-20 h-20" />}
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex gap-2 text-xs text-gray-700 w-40 items-center">
-          <Avatar className="w-6 h-6">
-            <AvatarImage src={userProfile?.image} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          {userProfile?.name}
-        </div>
-        <div className="text-xs text-gray-700">
-          Uploaded on {format(new Date(file._creationTime), "dd/MM/yyyy")} at{" "}
-          {format(new Date(file._creationTime), "HH:mm")}
-        </div>
-      </CardFooter>
+      <CardFooter className="flex flex-col justify-between p-4 bg-white border-t">
+  <div className="flex justify-between items-center mb-2">
+    <div className="flex items-center gap-2">
+      <Avatar className="w-6 h-6">
+        <AvatarImage src={userProfile?.image} />
+        <AvatarFallback>CN</AvatarFallback>
+      </Avatar>
+      <span className="text-sm text-gray-900">{userProfile?.name}</span>
+    </div>
+    <div className="text-sm text-gray-600">
+      Uploaded on {format(new Date(file._creationTime), "dd/MM/yyyy")} at{" "}
+      {format(new Date(file._creationTime), "HH:mm")}
+    </div>
+  </div>
+  <div className="flex flex-col gap-2">
+  {comments && comments.map((comment, index) => (
+    <div key={index} className="bg-gray-100 p-4 rounded-md shadow flex items-center">
+      <div className="text-xs text-gray-600 flex-1">
+        {comment.createdAt} {/* Hiển thị thời gian bình luận */}
+      </div>
+      <div className="text-xs text-gray-800 flex-1">
+        {comment.text} {/* Hiển thị nội dung bình luận */}
+      </div>
+      <div className="text-xs text-gray-500 flex-1">
+        By: {comment.userName} {/* Hiển thị tên người dùng đã bình luận */}
+      </div>
+    </div>
+  ))}
+</div>
+</CardFooter>
     </Card>
   );
 }

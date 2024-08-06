@@ -5,7 +5,6 @@ export function Footer() {
     <div className="h-40 bg-gray-100 mt-12 flex items-center">
       <div className="container mx-auto flex justify-between items-center">
         <div>Quản lý đề thi</div>
-
         <Link className="text-blue-900 hover:text-blue-500" href="/privacy">
           Chính sách bảo mật
         </Link>

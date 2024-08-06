@@ -12,6 +12,9 @@ export function Header(){
         <Button variant={"outline"}>
               <Link href="/dashboard/files">Tệp của bạn</Link>
         </Button>
+        <Button variant={"outline"}>
+              <Link href="/exam/thongke">Thống kê</Link>
+        </Button>
         <div className="flex gap-2">
             <OrganizationSwitcher/>
         <UserButton/>

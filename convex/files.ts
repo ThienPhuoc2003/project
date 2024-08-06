@@ -7,9 +7,10 @@ import {
   query,
 } from "./_generated/server";
 import { getUser } from "./users";
+2;
 import { fileTypes } from "./schema";
 import { Doc, Id } from "./_generated/dataModel";
-
+//tác dụng tạo một URL tạm thời cho phép người dùng đã đăng nhập tải tệp lên hệ thống lưu trữ. Nếu người dùng chưa đăng nhập, hàm sẽ ném ra một lỗi để ngăn chặn việc tạo URL.
 export const generateUploadUrl = mutation(async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
 
@@ -30,7 +31,6 @@ export const getDownloadUrl = mutation({
       .query("files")
       .filter((q) => q.eq(q.field("fileId"), args.fileId))
       .first();
-      
     return { downloadUrl, ...data };
   },
 });
@@ -87,6 +87,7 @@ export const createFile = mutation({
       fileId: args.fileId,
       type: args.type,
       userId: hasAccess.user._id,
+      comments: [],
     });
   },
 });
@@ -180,6 +181,7 @@ function assertCanDeleteFile(user: Doc<"users">, file: Doc<"files">) {
   }
 }
 
+
 export const deleteFile = mutation({
   args: { fileId: v.id("files") },
   async handler(ctx, args) {
@@ -222,7 +224,9 @@ export const toggleFavorite = mutation({
     if (!access) {
       throw new ConvexError("no access to file");
     }
-
+    if (!access.user.orgIds.find((org) => org.orgId === access.file.orgId && org.role === "admin")) {
+      throw new ConvexError("Chỉ trưởng bộ môn mới được duyệt ");
+    }
     const favorite = await ctx.db
       .query("favorites")
       .withIndex("by_userId_orgId_fileId", (q) =>
@@ -283,3 +287,57 @@ async function hasAccessToFile(
 
   return { user: hasAccess.user, file };
 }
+
+function assertCanCommentFile(user: Doc<"users">, file: Doc<"files">) {
+  const canComment =
+    file.userId === user._id ||
+    user.orgIds.find((org) => org.orgId === file.orgId)?.role === "admin";
+
+  if (!canComment) {
+    throw new ConvexError("You have no access to comment on this file");
+  }
+}
+
+export const addCommentToFile = mutation({
+  args: {
+    fileId: v.id("files"),
+    userId: v.id("users"),
+    commentText: v.string(),
+  },
+  async handler(ctx, { fileId, userId, commentText }) {
+    if (!commentText.trim()) {
+      throw new ConvexError("Comment text cannot be empty.");
+    }
+    const timestamp = Date.now();
+    await ctx.db.patch(fileId, {
+      comments: [{ userId, text: commentText, createdAt: Date.now() }],
+    });
+  },
+});
+export const getCommentsByFileId = query({
+  args: { fileId: v.id("files") },
+  async handler(ctx, { fileId }) {
+    const file = await ctx.db.get(fileId);
+    if (!file) {
+      throw new Error("File not found.");
+    }
+
+    // Kiểm tra xem file có bình luận không
+    const comments = file.comments || [];
+
+    // Lấy thông tin người dùng cho mỗi bình luận
+    const commentsWithUserNames = await Promise.all(comments.map(async (comment) => {
+      const user = await ctx.db.get(comment.userId); // Giả sử có một hàm getUser trong ctx.db để lấy thông tin người dùng
+      return {
+        createdAt: new Date(comment.createdAt).toLocaleString(), // Chuyển timestamp thành chuỗi ngày giờ địa phương
+        text: comment.text,
+        userName: user ? user.name : "Unknown User" // Trả về tên người dùng hoặc "Unknown User" nếu không tìm thấy
+      };
+    }));
+
+    return commentsWithUserNames;
+  },
+});
+
+
+

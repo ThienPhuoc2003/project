@@ -28,6 +28,7 @@ http.route({
             tokenIdentifier: `https://${process.env.CLERK_HOSTNAME}|${result.data.id}`,
             name:`${result.data.first_name??""}${result.data.last_name ??""}`,
             image:result.data.image_url,
+            // email: result.data.email, 
           });
           break;
           case "user.updated":
@@ -37,6 +38,7 @@ http.route({
               result.data.last_name ?? ""
             }`,
             image: result.data.image_url,
+            // email: result.data.email, 
           });
           break;
             break;
