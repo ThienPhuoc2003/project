@@ -55,10 +55,10 @@ export function FileCardActions({
         commentText,
       })
         .then(() => {
-          console.log("Comment added successfully");
+          console.log("Bình luận thành công");
         })
         .catch((error) => {
-          console.error("Failed to add comment:", error);
+          console.error("Bình luận thất bại:", error);
         });
     }
   };

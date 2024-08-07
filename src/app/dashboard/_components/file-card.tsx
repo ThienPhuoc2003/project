@@ -57,17 +57,6 @@ export function FileCard({
         {file.type === "image" && file.url && (
           <Image alt={file.name} width="600" height="800" src={file.url} />
         )}
-        {/* {file.type === "image" 
-        && (
-          <Image
-            unoptimized
-            alt={file.name}
-            width="200"
-            height="200"
-            src={file.url}
-          />
-        )
-        } */}
         {file.type == "docx" && <TextIcon className="w-20 h-20" />}
         {file.type == "csv" && <GanttChartIcon className="w-20 h-20" />}
         {file.type == "pdf" && <FileTextIcon className="w-20 h-20" />}

@@ -15,7 +15,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
 
   if (!identity) {
-    throw new ConvexError("you must be logged in to upload a file");
+    throw new ConvexError("bạn phải đăng nhập để tải lên 1 đề thi");
   }
 
   return await ctx.storage.generateUploadUrl();
@@ -78,7 +78,7 @@ export const createFile = mutation({
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
     if (!hasAccess) {
-      throw new ConvexError("you do not have access to this org");
+      throw new ConvexError("bạn không có quyền truy cập vào tổ chức này!");
     }
 
     await ctx.db.insert("files", {
@@ -177,7 +177,7 @@ function assertCanDeleteFile(user: Doc<"users">, file: Doc<"files">) {
     user.orgIds.find((org) => org.orgId === file.orgId)?.role === "admin";
 
   if (!canDelete) {
-    throw new ConvexError("you have no acces to delete this file");
+    throw new ConvexError("bạn không có quyền xóa tập tin này!");
   }
 }
 
@@ -188,7 +188,7 @@ export const deleteFile = mutation({
     const access = await hasAccessToFile(ctx, args.fileId);
 
     if (!access) {
-      throw new ConvexError("no access to file");
+      throw new ConvexError("không có quyền truy cập vào tập tin");
     }
 
     assertCanDeleteFile(access.user, access.file);
@@ -205,7 +205,7 @@ export const restoreFile = mutation({
     const access = await hasAccessToFile(ctx, args.fileId);
 
     if (!access) {
-      throw new ConvexError("no access to file");
+      throw new ConvexError("không có quyền truy cập vào tập tin");
     }
 
     assertCanDeleteFile(access.user, access.file);
@@ -222,7 +222,7 @@ export const toggleFavorite = mutation({
     const access = await hasAccessToFile(ctx, args.fileId);
 
     if (!access) {
-      throw new ConvexError("no access to file");
+      throw new ConvexError("không có quyền truy cập vào tập tin");
     }
     if (!access.user.orgIds.find((org) => org.orgId === access.file.orgId && org.role === "admin")) {
       throw new ConvexError("Chỉ trưởng bộ môn mới được duyệt ");
@@ -294,7 +294,7 @@ function assertCanCommentFile(user: Doc<"users">, file: Doc<"files">) {
     user.orgIds.find((org) => org.orgId === file.orgId)?.role === "admin";
 
   if (!canComment) {
-    throw new ConvexError("You have no access to comment on this file");
+    throw new ConvexError("Bạn không có quyền bình luận về tập tin này!");
   }
 }
 
@@ -306,7 +306,7 @@ export const addCommentToFile = mutation({
   },
   async handler(ctx, { fileId, userId, commentText }) {
     if (!commentText.trim()) {
-      throw new ConvexError("Comment text cannot be empty.");
+      throw new ConvexError("Nội dung bình luận không được để trống!");
     }
     const timestamp = Date.now();
     await ctx.db.patch(fileId, {
@@ -341,3 +341,18 @@ export const getCommentsByFileId = query({
 
 
 
+export const getTotalFiles = query(async (ctx) => {
+  const files = await ctx.db.query("files").collect();
+  return files.length;
+});
+
+// Truy vấn để lấy tổng số tệp được yêu thích
+export const getTotalFavorites = query(async (ctx) => {
+  const favorites = await ctx.db.query("favorites").collect();
+  return favorites.length;  
+});
+
+// Truy vấn để lấy tất cả các tệp
+export const getAllFiles = query(async ({ db }) => {
+  return await db.query("files").collect();
+});

@@ -5,7 +5,7 @@ import { roles } from "./schema";
 export async function getUser(ctx:QueryCtx| MutationCtx,tokenIdentifier:string){
     const user= await ctx.db.query("users").withIndex('by_tokenIdentifier',q=>q.eq('tokenIdentifier',tokenIdentifier)).first();
     if(!user){
-        throw new ConvexError("expected user to be defined");
+        throw new ConvexError("người dùng dự kiến ​​sẽ được xác định");
     }
     return user;
 }
@@ -43,7 +43,7 @@ export const updateUser = internalMutation({
         .first();
   
       if (!user) {
-        throw new ConvexError("no user with this token found");
+        throw new ConvexError("không tìm thấy người dùng này!");
       }
   
       await ctx.db.patch(user._id, {
@@ -74,7 +74,7 @@ export const updateRoleInOrgForUser = internalMutation({
 
         if(!org)
 {
-    throw new ConvexError("expected an org on the user but was not found when updating role");
+    throw new ConvexError("Không thể cập nhật vai trò!");
 }        
     org.role = args.role;
         await ctx.db.patch(user._id,{ 
