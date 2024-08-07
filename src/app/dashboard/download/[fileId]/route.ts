@@ -14,7 +14,7 @@ export const GET = async (req: Request, context: { params: Params }) => {
 
   if (!file)
     return NextResponse.json(
-      { error: { message: "File not found" } },
+      { error: { message: "Không tìm thấy tập tin" } },
       { status: 404 }
     );
 

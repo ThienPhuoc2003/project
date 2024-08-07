@@ -33,6 +33,7 @@
     "lucide-react": "^0.408.0",
     "next": "14.2.5",
     "nodemailer": "^6.9.14",
+    "object.groupby": "^1.0.3",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.52.1",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/object.groupby": "^1.0.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

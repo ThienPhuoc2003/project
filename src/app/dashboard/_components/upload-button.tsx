@@ -38,7 +38,7 @@ const formSchema = z.object({
     .refine((files) => files.length > 0, "Required"),
 });
 
-export function UploadButton() {
+export function UploadButton({ data }: { data?: string[] }) {
   const [showNotificationMenu, setShowNotificationMenu] = useState(false);
   const { toast } = useToast();
   const organization = useOrganization();
@@ -69,18 +69,25 @@ export function UploadButton() {
       method: "POST",
       body: JSON.stringify(body),
       headers: { "Content-Type": "application/json" },
-    })
+    });
 
     if (!res.ok) return toast({ title: "Lỗi khi gửi thông báo!" });
- 
+
     toast({ title: `Thông báo gửi thành công: ${option}` });
     // Additional logic based on the selected option
   };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!orgId) return;
+    if (data && data.includes(values.title)) {
+      return toast({
+        variant: "destructive",
+        title: "Có lỗi xảy ra",
+        description: "Tên tệp đã tồn tại, vui lòng nhập lại tên khác!",
+      });
+    }
 
     const postUrl = await generateUploadUrl();
-
     const fileType = values.file[0].type;
 
     const result = await fetch(postUrl, {
@@ -88,6 +95,7 @@ export function UploadButton() {
       headers: { "Content-Type": fileType },
       body: values.file[0],
     });
+
     const { storageId } = await result.json();
     const types = {
       "image/png": "image",
@@ -96,6 +104,7 @@ export function UploadButton() {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         "docx",
     } as Record<string, Doc<"files">["type"]>;
+
     try {
       await createFile({
         name: values.title,

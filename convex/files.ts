@@ -181,7 +181,6 @@ function assertCanDeleteFile(user: Doc<"users">, file: Doc<"files">) {
   }
 }
 
-
 export const deleteFile = mutation({
   args: { fileId: v.id("files") },
   async handler(ctx, args) {
@@ -224,7 +223,11 @@ export const toggleFavorite = mutation({
     if (!access) {
       throw new ConvexError("không có quyền truy cập vào tập tin");
     }
-    if (!access.user.orgIds.find((org) => org.orgId === access.file.orgId && org.role === "admin")) {
+    if (
+      !access.user.orgIds.find(
+        (org) => org.orgId === access.file.orgId && org.role === "admin"
+      )
+    ) {
       throw new ConvexError("Chỉ trưởng bộ môn mới được duyệt ");
     }
     const favorite = await ctx.db
@@ -326,30 +329,29 @@ export const getCommentsByFileId = query({
     const comments = file.comments || [];
 
     // Lấy thông tin người dùng cho mỗi bình luận
-    const commentsWithUserNames = await Promise.all(comments.map(async (comment) => {
-      const user = await ctx.db.get(comment.userId); // Giả sử có một hàm getUser trong ctx.db để lấy thông tin người dùng
-      return {
-        createdAt: new Date(comment.createdAt).toLocaleString(), // Chuyển timestamp thành chuỗi ngày giờ địa phương
-        text: comment.text,
-        userName: user ? user.name : "Unknown User" // Trả về tên người dùng hoặc "Unknown User" nếu không tìm thấy
-      };
-    }));
+    const commentsWithUserNames = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await ctx.db.get(comment.userId); // Giả sử có một hàm getUser trong ctx.db để lấy thông tin người dùng
+        return {
+          createdAt: new Date(comment.createdAt).toLocaleString(), // Chuyển timestamp thành chuỗi ngày giờ địa phương
+          text: comment.text,
+          userName: user ? user.name : "Unknown User", // Trả về tên người dùng hoặc "Unknown User" nếu không tìm thấy
+        };
+      })
+    );
 
     return commentsWithUserNames;
   },
 });
 
-
-
-export const getTotalFiles = query(async (ctx) => {
+export const getAnalyticsData = query(async (ctx) => {
   const files = await ctx.db.query("files").collect();
-  return files.length;
-});
-
-// Truy vấn để lấy tổng số tệp được yêu thích
-export const getTotalFavorites = query(async (ctx) => {
   const favorites = await ctx.db.query("favorites").collect();
-  return favorites.length;  
+
+  return [files, favorites].flat().map((data) => ({
+    createdAt: data._creationTime,
+    isFile: "type" in data && typeof data.type !== "undefined",
+  }));
 });
 
 // Truy vấn để lấy tất cả các tệp

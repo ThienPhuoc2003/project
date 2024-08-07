@@ -30,7 +30,10 @@ function Placeholder() {
         height="300"
         src="/empty.svg"
       />
-      <div className="text-2xl">Bạn không có tập tin nào, hãy tải lên ngay bây giờ</div>
+      <div className="text-2xl">
+        Bạn không có tập tin nào, hãy tải lên ngay bây giờ
+      </div>
+
       <UploadButton />
     </div>
   );
@@ -89,7 +92,7 @@ export function FileBrowser({
 
         <SearchBar query={query} setQuery={setQuery} />
 
-        <UploadButton />
+        <UploadButton data={modifiedFiles.map((file) => file.name)} />
       </div>
 
       <Tabs defaultValue="grid">
@@ -97,7 +100,7 @@ export function FileBrowser({
           <TabsList className="mb-2">
             <TabsTrigger value="grid" className="flex gap-2 items-center">
               <GridIcon />
-             Lưới
+              Lưới
             </TabsTrigger>
             <TabsTrigger value="table" className="flex gap-2 items-center">
               <RowsIcon /> Bảng

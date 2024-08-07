@@ -1,9 +1,9 @@
 import { FileBrowser } from "../_components/file-browser";
 
-
-export default function FilesPage(){
-    return <div>
-
-<FileBrowser title="Tệp của bạn"/>
+export default function FilesPage() {
+  return (
+    <div>
+      <FileBrowser title="Tệp của bạn" />
     </div>
+  );
 }

@@ -57,7 +57,7 @@ export const POST = async (req: Request) => {
     }
 
     return NextResponse.json({
-      message: "Notification sent successfully",
+      message: "Thông báo đã được gửi thành công",
       data,
     });
   } catch (error) {
