@@ -43,7 +43,7 @@ export const HienThiDuLieu = ({ data }: { data: Data[number] }) => {
       </div>
 
       <div className="border rounded-lg px-4 py-2">
-        <h3>Số lượng file yêu thích đã tải trong năm</h3>
+        <h3>Số lượng file đã duyệt trong năm</h3>
         <span>{favorites.length}</span>
       </div>
     </div>
