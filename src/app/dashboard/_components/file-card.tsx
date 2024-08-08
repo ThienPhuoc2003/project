@@ -93,7 +93,7 @@ export function FileCard({
         </div>
       </div>
       <div className="text-xs text-gray-500 text-center">
-        {comment.createdAt} {/* Thời gian bình luận, được căn giữa */}
+        {/* {comment.createdAt} Thời gian bình luận, được căn giữa */}
       </div>
       <div className="text-sm text-gray-800 text-center mt-1">
         {comment.text} {/* Nội dung bình luận, được căn giữa */}
