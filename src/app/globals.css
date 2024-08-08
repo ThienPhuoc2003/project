@@ -96,3 +96,15 @@
   padding: 8px;
   border-radius: 8px;
 }
+.doc-icon-wrapper {
+  width: 30px;  /* Adjust size accordingly */
+  height: 30px; /* Adjust size accordingly */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.doc-icon-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+}

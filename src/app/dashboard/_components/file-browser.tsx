@@ -124,6 +124,7 @@ export function FileBrowser({
                 <SelectItem value="csv">CSV</SelectItem>
                 <SelectItem value="pdf">PDF</SelectItem>
                 <SelectItem value="docx">Word</SelectItem>
+                <SelectItem value="xlsx">Excel</SelectItem>
               </SelectContent>
             </Select>
           </div>

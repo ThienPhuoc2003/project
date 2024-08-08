@@ -32,14 +32,14 @@ export function FileCard({
   });
   const comments = useQuery(api.files.getCommentsByFileId, { fileId: file._id });
 
-  
-
   const typeIcons: Record<Doc<"files">["type"], ReactNode> = {
     image: <ImageIcon />,
     pdf: <FileTextIcon />,
     csv: <GanttChartIcon />,
-    docx: <TextIcon />,
+    docx: <img src="/word.png" alt="Word Document Icon" style={{ width: '25px', height: '25px' }} />,
+    xlsx: <img src="/excel.png" alt="Excel Document Icon" style={{ width: '25px', height: '25px' }}/>
   };
+
 
   const icon = typeIcons[file.type];
   return (
@@ -55,9 +55,14 @@ export function FileCard({
       </CardHeader>
       <CardContent className="h-[200px] flex justify-center items-center">
         {file.type === "image" && file.url && (
-          <Image alt={file.name} width="600" height="800" src={file.url} />
+          <Image alt={file.name} width="200" height="200" src={file.url} />
         )}
-        {file.type == "docx" && <TextIcon className="w-20 h-20" />}
+      {file.type === "docx" && (
+    <img src="/word.png" alt="Word Document Icon" className="w-20 h-20" />
+      )}
+       {file.type === "xlsx" && (
+    <img src="/excel.png" alt="Word Document Icon" className="w-25 h-25" />
+      )}
         {file.type == "csv" && <GanttChartIcon className="w-20 h-20" />}
         {file.type == "pdf" && <FileTextIcon className="w-20 h-20" />}
       </CardContent>
@@ -75,17 +80,23 @@ export function FileCard({
       {format(new Date(file._creationTime), "HH:mm")}
     </div>
   </div>
-  <div className="flex flex-col gap-2">
+  <div className="flex flex-col gap-3">
   {comments && comments.map((comment, index) => (
-    <div key={index} className="bg-gray-100 p-4 rounded-md shadow flex items-center">
-      <div className="text-xs text-gray-600 flex-1">
-        {comment.createdAt} {/* Hiển thị thời gian bình luận */}
+    <div key={index} className="bg-gray-100 p-5 rounded-md shadow flex flex-col gap-2">
+      <div className="flex items-center gap-3">
+        <Avatar className="w-6 h-6">
+          <AvatarImage src={userProfile?.image} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <div className="text-xs text-gray-600 flex-1">
+          <span>{comment.userName}</span>
+        </div>
       </div>
-      <div className="text-xs text-gray-800 flex-1">
-        {comment.text} {/* Hiển thị nội dung bình luận */}
+      <div className="text-xs text-gray-500 text-center">
+        {comment.createdAt} {/* Thời gian bình luận, được căn giữa */}
       </div>
-      <div className="text-xs text-gray-500 flex-1">
-        By: {comment.userName} {/* Hiển thị tên người dùng đã bình luận */}
+      <div className="text-sm text-gray-800 text-center mt-1">
+        {comment.text} {/* Nội dung bình luận, được căn giữa */}
       </div>
     </div>
   ))}

@@ -103,6 +103,7 @@ export function UploadButton({ data }: { data?: string[] }) {
       "text/csv": "csv",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         "docx",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
     } as Record<string, Doc<"files">["type"]>;
 
     try {
