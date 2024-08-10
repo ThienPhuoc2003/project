@@ -58,6 +58,7 @@ export function SearchBar({query, setQuery}:
             )}
             <SearchIcon /> Tìm kiếm
           </Button>
+          
         </form>
       </Form>
     </div>
