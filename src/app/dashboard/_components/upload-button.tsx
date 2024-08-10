@@ -155,7 +155,7 @@ export function UploadButton({ data }: { data?: string[] }) {
         form.reset();
       }}
     >
-      <Button onClick={() => setShowNotificationMenu(!showNotificationMenu)}>
+     <Button onClick={() => setShowNotificationMenu(!showNotificationMenu)}>
   Thông báo
 </Button>
 
@@ -174,7 +174,7 @@ export function UploadButton({ data }: { data?: string[] }) {
       justifyContent: "center",
       zIndex: 1000,
     }}
-    onClick={handleBackgroundClick}
+    onClick={() => setShowNotificationMenu(false)} // Đóng menu khi nhấn ngoài
   >
     <div
       style={{
@@ -202,20 +202,20 @@ export function UploadButton({ data }: { data?: string[] }) {
         2.Thông báo đã duyệt đề rồi!
       </div>
       <div style={{ padding: "10px" }}>
-  <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-    <input
-      type="text"
-      placeholder="3.Nhập thông báo..."
-      value={customMessage}
-      onChange={(e) => setCustomMessage(e.target.value)}
-      style={{ marginRight: "10px", flexGrow: 1 }}
-    />
-    <button onClick={() => handleNotificationSelect(customMessage)}>
-      Gửi 
-    </button>
-  </div>
-</div>
-</div>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+          <input
+            type="text"
+            placeholder="3.Nhập thông báo..."
+            value={customMessage}
+            onChange={(e) => setCustomMessage(e.target.value)}
+            style={{ marginRight: "10px", flexGrow: 1 }}
+          />
+          <button onClick={() => handleNotificationSelect(customMessage)}>
+            Gửi
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 )}
       
