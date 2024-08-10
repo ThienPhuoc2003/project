@@ -55,6 +55,11 @@ export function UploadButton({ data }: { data?: string[] }) {
   });
 
   const fileRef = form.register("file");
+  const handleBackgroundClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (event.target instanceof HTMLDivElement && event.target.id === "notification-background") {
+      setShowNotificationMenu(false);
+    }
+  };
 
   const handleNotificationSelect = async (option: string) => {
     setShowNotificationMenu(false);
@@ -141,7 +146,7 @@ export function UploadButton({ data }: { data?: string[] }) {
   const [isFileDialogOpen, setIsFileDialogOpen] = useState(false);
 
   const createFile = useMutation(api.files.createFile);
-
+  const [customMessage, setCustomMessage] = useState("");
   return (
     <Dialog
       open={isFileDialogOpen}
@@ -151,51 +156,69 @@ export function UploadButton({ data }: { data?: string[] }) {
       }}
     >
       <Button onClick={() => setShowNotificationMenu(!showNotificationMenu)}>
-        Thông báo
-      </Button>
+  Thông báo
+</Button>
 
-      {showNotificationMenu && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              zIndex: 1001,
-            }}
-          >
-            <div
-              onClick={() =>
-                handleNotificationSelect("1.Thông báo mọi người gửi đề!")
-              }
-              style={{ padding: "10px", cursor: "pointer" }}
-            >
-              1.Thông báo mọi người gửi đề!
-            </div>
-            <div
-              onClick={() =>
-                handleNotificationSelect("2.Thông báo đã duyệt đề rồi!")
-              }
-              style={{ padding: "10px", cursor: "pointer" }}
-            >
-              2.Thông báo đã duyệt đề rồi!
-            </div>
-          </div>
-        </div>
-      )}
+{showNotificationMenu && (
+  <div
+    id="notification-background"
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000,
+    }}
+    onClick={handleBackgroundClick}
+  >
+    <div
+      style={{
+        backgroundColor: "white",
+        padding: "20px",
+        borderRadius: "8px",
+        zIndex: 1001,
+      }}
+      onClick={(e) => e.stopPropagation()} // Ngăn sự kiện nổi bọt lên background
+    >
+      <div
+        onClick={() =>
+          handleNotificationSelect("1.Thông báo mọi người gửi đề!")
+        }
+        style={{ padding: "10px", cursor: "pointer" }}
+      >
+        1.Thông báo mọi người gửi đề!
+      </div>
+      <div
+        onClick={() =>
+          handleNotificationSelect("2.Thông báo đã duyệt đề rồi!")
+        }
+        style={{ padding: "10px", cursor: "pointer" }}
+      >
+        2.Thông báo đã duyệt đề rồi!
+      </div>
+      <div style={{ padding: "10px" }}>
+  <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+    <input
+      type="text"
+      placeholder="3.Nhập thông báo..."
+      value={customMessage}
+      onChange={(e) => setCustomMessage(e.target.value)}
+      style={{ marginRight: "10px", flexGrow: 1 }}
+    />
+    <button onClick={() => handleNotificationSelect(customMessage)}>
+      Gửi 
+    </button>
+  </div>
+</div>
+</div>
+  </div>
+)}
+      
 
       <DialogTrigger asChild>
         <Button>Tải Tệp Lên</Button>
